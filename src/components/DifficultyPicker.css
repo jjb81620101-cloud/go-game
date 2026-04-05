@@ -1,0 +1,65 @@
+.difficulty-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.difficulty-picker h2 {
+  color: #e8d5b7;
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.difficulty-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 280px;
+}
+
+.difficulty-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #4a4a4a;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #e8d5b7;
+  text-align: left;
+}
+
+.difficulty-btn:hover {
+  background: rgba(106,159,212,0.2);
+  border-color: #6a9fd4;
+  transform: translateX(4px);
+}
+
+.difficulty-btn .level {
+  font-size: 0.9rem;
+  color: #6a9fd4;
+  min-width: 40px;
+}
+
+.difficulty-btn .name {
+  font-size: 1rem;
+}
+
+.back-btn {
+  margin-top: 2rem;
+  padding: 0.5rem 1.5rem;
+  background: transparent;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  color: #a89070;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  border-color: #a89070;
+  color: #e8d5b7;
+}

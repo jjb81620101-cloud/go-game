@@ -1,0 +1,167 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.game-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.game-header .back-btn {
+  background: transparent;
+  border: none;
+  color: #a89070;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.game-header .back-btn:hover {
+  color: #e8d5b7;
+}
+
+.game-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.difficulty {
+  color: #6a9fd4;
+  font-size: 0.9rem;
+}
+
+.mode {
+  color: #a89070;
+  font-size: 0.9rem;
+}
+
+.game-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.current-player {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+}
+
+.current-player .stone-icon {
+  font-size: 1.2rem;
+}
+
+.ai-thinking {
+  color: #70a870;
+  font-size: 0.9rem;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.board-wrapper {
+  margin: 1rem 0;
+}
+
+.captured-info {
+  display: flex;
+  gap: 2rem;
+  margin: 0.5rem 0;
+  color: #a89070;
+  font-size: 0.85rem;
+}
+
+.game-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.game-controls button {
+  padding: 0.5rem 1.2rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  color: #e8d5b7;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.game-controls button:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: #a89070;
+}
+
+.game-controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.score-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a1a1a;
+  border: 1px solid #4a4a4a;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  z-index: 100;
+  min-width: 300px;
+}
+
+.score-modal h3 {
+  color: #e8d5b7;
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin: 0 0 1.5rem;
+}
+
+.score-details {
+  margin-bottom: 1.5rem;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #c0b0a0;
+  border-bottom: 1px solid #333;
+}
+
+.score-row:last-child {
+  border-bottom: none;
+}
+
+.winner {
+  font-size: 1.5rem;
+  color: #70c070;
+  margin-bottom: 1.5rem;
+}
+
+.score-modal button {
+  padding: 0.6rem 2rem;
+  background: rgba(106,159,212,0.2);
+  border: 1px solid #6a9fd4;
+  border-radius: 4px;
+  color: #e8d5b7;
+  cursor: pointer;
+}
+
+.score-modal button:hover {
+  background: rgba(106,159,212,0.3);
+}

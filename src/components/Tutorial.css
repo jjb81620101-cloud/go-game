@@ -1,0 +1,82 @@
+.tutorial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.tutorial-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tutorial-header .back-btn {
+  background: transparent;
+  border: none;
+  color: #a89070;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.tutorial-header .back-btn:hover {
+  color: #e8d5b7;
+}
+
+.lesson-counter {
+  color: #a89070;
+  font-size: 0.9rem;
+}
+
+.tutorial h2 {
+  color: #e8d5b7;
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin: 0.5rem 0;
+}
+
+.lesson-content {
+  color: #c0b0a0;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.6;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.tutorial-board {
+  margin: 1rem 0;
+}
+
+.tutorial-message {
+  color: #70c070;
+  font-size: 1.1rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.tutorial-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.tutorial-nav button {
+  padding: 0.6rem 2rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  color: #e8d5b7;
+  cursor: pointer;
+}
+
+.tutorial-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.tutorial-nav button:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: #a89070;
+}

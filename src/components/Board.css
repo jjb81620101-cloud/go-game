@@ -1,0 +1,22 @@
+.board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(145deg, #d4a574, #c49a6c);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.board-svg {
+  display: block;
+}
+
+.stone {
+  transition: transform 0.1s ease;
+  transform-origin: center;
+}
+
+.stone:hover {
+  transform: scale(1.05);
+}
