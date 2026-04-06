@@ -33,7 +33,7 @@ export default function Game({ mode, difficulty, onBack }) {
       getBestMoveAsync(board, WHITE, diffConfig.visits).then(move => {
         if (cancelled) return;
         if (move) {
-          handleMove(move[0], move[1]);
+          handleMove(move[0], move[1], true);
         } else {
           handlePass();
         }
@@ -44,9 +44,9 @@ export default function Game({ mode, difficulty, onBack }) {
     }
   }, [currentColor, mode, board, gameOver, status, difficulty]);
 
-  const handleMove = useCallback((row, col) => {
+  const handleMove = useCallback((row, col, isAIMove = false) => {
     if (gameOver || status !== 'playing') return;
-    if (mode === 'ai' && currentColor === WHITE) return;
+    if (mode === 'ai' && currentColor === WHITE && !isAIMove) return;
     
     const result = playMove(board, row, col, currentColor, koPoint, history[history.length - 1]);
     if (!result) return;
@@ -85,7 +85,7 @@ export default function Game({ mode, difficulty, onBack }) {
         setAiThinking(false);
       }, 500);
     }
-  }, [currentColor, gameOver, mode]);
+  }, [currentColor, gameOver, mode, board]);
 
   const endGame = () => {
     const finalScore = calculateScore(board);
@@ -102,6 +102,10 @@ export default function Game({ mode, difficulty, onBack }) {
       setHistory(newHistory);
       setCurrentColor(currentColor === BLACK ? WHITE : BLACK);
       setLastMove(null);
+      setKoPoint(null);
+      setPassCount(0);
+      setCapturedBlack(0);
+      setCapturedWhite(0);
     }
   };
 

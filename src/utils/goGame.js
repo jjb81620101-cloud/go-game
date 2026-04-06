@@ -63,23 +63,17 @@ function removeStones(board, group) {
 }
 
 function isKo(board, lastMove, capturedStones, prevBoard) {
-  // Ko: exactly 1 stone captured, and the new stone creates the same situation
+  // Ko: exactly 1 stone captured, and the board returns to previous state
   if (capturedStones.length !== 1) return false;
-  if (!lastMove || !prevBoard) return false;
-  
-  const [row, col] = lastMove;
-  const [cr, cc] = capturedStones[0];
-  
-  // Check that the captured stone's position was the previous move's position
-  if (cr !== lastMove[0] || cc !== lastMove[1]) return false;
-  
-  // After capturing, check if the new stone only has 1 liberty (the ko point)
-  const newBoard = copyBoard(board);
-  newBoard[row][col] = board[row][col]; // restore color
-  const group = getGroup(newBoard, row, col);
-  if (!group || getLiberties(newBoard, group) !== 1) return false;
-  
-  // The ko point should be the captured stone's position
+  if (!prevBoard) return false;
+
+  // Compare current board with prevBoard - if they're identical, it's ko
+  // (the same situation existed before this move)
+  for (let r = 0; r < BOARD_SIZE; r++) {
+    for (let c = 0; c < BOARD_SIZE; c++) {
+      if (board[r][c] !== prevBoard[r][c]) return false;
+    }
+  }
   return true;
 }
 
@@ -188,11 +182,12 @@ class MCTSNode {
     this.untriedMoves = this.getLegalMoves();
   }
 
-  getLegalMoves() {
+  getLegalMoves(koPoint = null) {
     const moves = [];
     for (let r = 0; r < BOARD_SIZE; r++) {
       for (let c = 0; c < BOARD_SIZE; c++) {
         if (this.board[r][c] === EMPTY) {
+          if (koPoint && r === koPoint[0] && c === koPoint[1]) continue;
           const result = playMove(this.board, r, c, this.color);
           if (result) moves.push([r, c]);
         }
@@ -259,10 +254,10 @@ class MCTSNode {
     return score.blackScore > score.whiteScore ? BLACK : WHITE;
   }
 
-  backpropagate(winner) {
+  backpropagate(winner, parentColor) {
     this.visits++;
-    if (winner === this.color) this.wins++;
-    if (this.parent) this.parent.backpropagate(winner);
+    if (winner === parentColor) this.wins++;
+    if (this.parent) this.parent.backpropagate(winner, this.color);
   }
 }
 
@@ -280,7 +275,7 @@ export function getBestMove(board, color, visits) {
     
     const winner = node.simulate();
     
-    node.backpropagate(winner);
+    node.backpropagate(winner, this.color);
   }
 
   let best = null;
