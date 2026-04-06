@@ -10,59 +10,57 @@ export default function Board({ board, onClick, lastMove, highlightedStones, sho
     return [];
   };
 
+  // 計算點擊的交叉點
+  const handleSvgClick = (e) => {
+    if (!onClick) return;
+    const svg = e.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const col = Math.round((x - padding) / cellSize);
+    const row = Math.round((y - padding) / cellSize);
+    if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
+      onClick(row, col);
+    }
+  };
+
   return (
     <div className="board-container">
-      <svg 
-        width={padding * 2 + (BOARD_SIZE - 1) * cellSize} 
+      <svg
+        width={padding * 2 + (BOARD_SIZE - 1) * cellSize}
         height={padding * 2 + (BOARD_SIZE - 1) * cellSize}
         className="board-svg"
+        onClick={handleSvgClick}
+        style={{ cursor: onClick ? 'pointer' : 'default' }}
       >
         {/* 棋盤線 */}
         {[...Array(BOARD_SIZE)].map((_, i) => (
-          <g key={`v-${i}`}>
-            <line 
-              x1={padding + i * cellSize} y1={padding}
-              x2={padding + i * cellSize} y2={padding + (BOARD_SIZE - 1) * cellSize}
-              stroke="#8B7355" strokeWidth="1"
-            />
-          </g>
+          <line
+            key={`v-${i}`}
+            x1={padding + i * cellSize} y1={padding}
+            x2={padding + i * cellSize} y2={padding + (BOARD_SIZE - 1) * cellSize}
+            stroke="#8B7355" strokeWidth="1"
+          />
         ))}
         {[...Array(BOARD_SIZE)].map((_, i) => (
-          <g key={`h-${i}`}>
-            <line 
-              x1={padding} y1={padding + i * cellSize}
-              x2={padding + (BOARD_SIZE - 1) * cellSize} y2={padding + i * cellSize}
-              stroke="#8B7355" strokeWidth="1"
-            />
-          </g>
-        ))}
-        
-        {/* 星位 */}
-        {getStarPoints().map(([r, c], i) => (
-          <circle 
-            key={`star-${i}`} 
-            cx={padding + c * cellSize} 
-            cy={padding + r * cellSize} 
-            r="3" 
-            fill="#8B7355" 
+          <line
+            key={`h-${i}`}
+            x1={padding} y1={padding + i * cellSize}
+            x2={padding + (BOARD_SIZE - 1) * cellSize} y2={padding + i * cellSize}
+            stroke="#8B7355" strokeWidth="1"
           />
         ))}
 
-        {/* 透明點擊區域（每個交叉點） */}
-        {[...Array(BOARD_SIZE)].map((_, row) =>
-          [...Array(BOARD_SIZE)].map((_, col) => (
-            <rect
-              key={`click-${row}-${col}`}
-              x={padding + col * cellSize - cellSize / 2}
-              y={padding + row * cellSize - cellSize / 2}
-              width={cellSize}
-              height={cellSize}
-              fill="transparent"
-              style={{ cursor: onClick ? 'pointer' : 'default' }}
-              onClick={() => onClick && onClick(row, col)}
-            />
-          ))
-        )}
+        {/* 星位 */}
+        {getStarPoints().map(([r, c], i) => (
+          <circle
+            key={`star-${i}`}
+            cx={padding + c * cellSize}
+            cy={padding + r * cellSize}
+            r="3"
+            fill="#8B7355"
+          />
+        ))}
 
         {/* 棋子 */}
         {[...Array(BOARD_SIZE)].map((_, row) =>
