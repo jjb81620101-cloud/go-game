@@ -48,7 +48,7 @@ export default function Game({ mode, difficulty, onBack }) {
     if (gameOver || status !== 'playing') return;
     if (mode === 'ai' && currentColor === WHITE) return;
     
-    const result = playMove(board, row, col, currentColor, koPoint, board);
+    const result = playMove(board, row, col, currentColor, koPoint, history[history.length - 1]);
     if (!result) return;
 
     setBoard(result.board);
