@@ -43,7 +43,7 @@ export default function Game({ mode, difficulty, onBack }) {
     if (gameOver || status !== 'playing') return;
     if (mode === 'ai' && currentColor === WHITE) return;
     
-    const result = playMove(board, row, col, currentColor, koPoint);
+    const result = playMove(board, row, col, currentColor, koPoint, board);
     if (!result) return;
 
     setBoard(result.board);
@@ -52,7 +52,7 @@ export default function Game({ mode, difficulty, onBack }) {
     setHistory([...history, result.board]);
     setPassCount(0);
 
-    // 計算被吃掉棋子 (白方被吃 = 黑方吃，白方被吃 = 黑方吃)
+    // 計算被吃掉棋子 (黑方下棋吃到白子，白方被吃)
     if (currentColor === BLACK) {
       setCapturedWhite(prev => prev + result.captured.length);
     } else {
