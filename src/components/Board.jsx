@@ -1,8 +1,9 @@
 import { BOARD_SIZE, BLACK, WHITE, EMPTY } from '../utils/goGame';
 import './Board.css';
 
-export default function Board({ board, onClick, lastMove, highlightedStones, showTerritory }) {
-  const cellSize = 40;
+export default function Board({ board, onClick, lastMove, highlightedStones, showTerritory, size = BOARD_SIZE }) {
+  // Responsive cell size based on viewport
+  const cellSize = Math.min(40, Math.floor((window.innerWidth - 60) / BOARD_SIZE), Math.floor(400 / BOARD_SIZE));
   const padding = 20;
 
   const getStarPoints = () => {
@@ -10,15 +11,21 @@ export default function Board({ board, onClick, lastMove, highlightedStones, sho
     return [];
   };
 
+  const getSvgSize = () => {
+    const size = parseInt(cellSize) || 40;
+    return padding * 2 + (BOARD_SIZE - 1) * size;
+  };
+
   // 計算點擊的交叉點
   const handleSvgClick = (e) => {
     if (!onClick) return;
     const svg = e.currentTarget;
     const rect = svg.getBoundingClientRect();
+    const size = parseInt(cellSize) || 40;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const col = Math.round((x - padding) / cellSize);
-    const row = Math.round((y - padding) / cellSize);
+    const col = Math.round((x - padding) / size);
+    const row = Math.round((y - padding) / size);
     if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
       onClick(row, col);
     }

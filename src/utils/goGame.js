@@ -37,7 +37,8 @@ function getGroup(board, row, col, visited = new Set()) {
   const group = [[row, col]];
   for (const [r, c] of neighborCoords(row, col)) {
     if (board[r][c] === color) {
-      group.push(...getGroup(board, r, c, visited));
+      const childGroup = getGroup(board, r, c, visited);
+      if (childGroup) group.push(...childGroup);
     }
   }
   return group;
@@ -61,20 +62,28 @@ function removeStones(board, group) {
   }
 }
 
-function isKo(board, lastMove, capturedStones) {
+function isKo(board, lastMove, capturedStones, prevBoard) {
+  // Ko: exactly 1 stone captured, and the new stone creates the same situation
   if (capturedStones.length !== 1) return false;
+  if (!lastMove || !prevBoard) return false;
+  
   const [row, col] = lastMove;
   const [cr, cc] = capturedStones[0];
-  if (capturedStones.length === 1) {
-    const neighborEmpty = neighborCoords(cr, cc).filter(([r, c]) => board[r][c] === EMPTY);
-    if (neighborEmpty.length === 1 && neighborEmpty[0][0] === row && neighborEmpty[0][1] === col) {
-      return true;
-    }
-  }
-  return false;
+  
+  // Check that the captured stone's position was the previous move's position
+  if (cr !== lastMove[0] || cc !== lastMove[1]) return false;
+  
+  // After capturing, check if the new stone only has 1 liberty (the ko point)
+  const newBoard = copyBoard(board);
+  newBoard[row][col] = board[row][col]; // restore color
+  const group = getGroup(newBoard, row, col);
+  if (!group || getLiberties(newBoard, group) !== 1) return false;
+  
+  // The ko point should be the captured stone's position
+  return true;
 }
 
-export function playMove(board, row, col, color, koPoint = null) {
+export function playMove(board, row, col, color, koPoint = null, prevBoard = null) {
   if (board[row][col] !== EMPTY) return null;
   if (koPoint && row === koPoint[0] && col === koPoint[1]) return null;
 
@@ -98,7 +107,7 @@ export function playMove(board, row, col, color, koPoint = null) {
     return null;
   }
 
-  const ko = isKo(board, [row, col], captured) ? [captured[0][0], captured[0][1]] : null;
+  const ko = isKo(board, [row, col], captured, prevBoard) ? [captured[0][0], captured[0][1]] : null;
 
   return { board: newBoard, captured, ko };
 }
@@ -220,8 +229,11 @@ class MCTSNode {
     let board = copyBoard(this.board);
     let color = this.color;
     let passCount = 0;
+    const maxSimMoves = BOARD_SIZE * BOARD_SIZE * 2; // allow enough moves
     
-    while (passCount < 2) {
+    for (let moveNum = 0; moveNum < maxSimMoves; moveNum++) {
+      if (passCount >= 2) break;
+      
       const moves = [];
       for (let r = 0; r < BOARD_SIZE; r++) {
         for (let c = 0; c < BOARD_SIZE; c++) {
@@ -232,9 +244,8 @@ class MCTSNode {
         }
       }
       
-      if (moves.length === 0 || passCount >= 1) {
+      if (moves.length === 0) {
         passCount++;
-        if (passCount >= 2) break;
       } else {
         passCount = 0;
         const [r, c] = moves[Math.floor(Math.random() * moves.length)];

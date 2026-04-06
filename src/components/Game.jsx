@@ -34,7 +34,7 @@ export default function Game({ mode, difficulty, onBack }) {
           handlePass();
         }
         setAiThinking(false);
-      }, 100);
+      }, 500);
       return () => clearTimeout(timeoutId);
     }
   }, [currentColor, mode, board, gameOver, status, difficulty]);
@@ -52,11 +52,11 @@ export default function Game({ mode, difficulty, onBack }) {
     setHistory([...history, result.board]);
     setPassCount(0);
 
-    // 計算被吃掉棋子
+    // 計算被吃掉棋子 (白方被吃 = 黑方吃，白方被吃 = 黑方吃)
     if (currentColor === BLACK) {
-      setCapturedBlack(prev => prev + result.captured.length);
-    } else {
       setCapturedWhite(prev => prev + result.captured.length);
+    } else {
+      setCapturedBlack(prev => prev + result.captured.length);
     }
 
     setCurrentColor(currentColor === BLACK ? WHITE : BLACK);
