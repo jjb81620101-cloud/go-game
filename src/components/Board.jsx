@@ -9,7 +9,7 @@ export default function Board({ board, onClick, lastMove, highlightedStones, boa
     const updateSize = () => {
       const maxW = Math.floor((window.innerWidth - 80) / boardSize);
       const maxH = Math.floor((window.innerHeight - 300) / boardSize);
-      const size = Math.min(40, maxW, maxH, 50);
+      const size = Math.min(40, maxW, maxH);
       setCellSize(Math.max(size, 20));
     };
     

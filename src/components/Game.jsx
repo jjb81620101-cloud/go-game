@@ -11,7 +11,7 @@ export default function Game({ mode, difficulty, onBack }) {
   const [currentColor, setCurrentColor] = useState(BLACK);
   const [lastMove, setLastMove] = useState(null);
   const [koPoint, setKoPoint] = useState(null);
-  const [history, setHistory] = useState([createBoard()]);
+  const [history, setHistory] = useState([{board: createBoard(), capturedBlack: 0, capturedWhite: 0}]);
   const [passCount, setPassCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(null);
@@ -42,7 +42,7 @@ export default function Game({ mode, difficulty, onBack }) {
       
       return () => { cancelled = true; };
     }
-  }, [currentColor, mode, board, gameOver, status, difficulty]);
+  }, [currentColor, mode, board, gameOver, status, difficulty, handleMove, handlePass]);
 
   const handleMove = useCallback((row, col, isAIMove = false) => {
     if (gameOver || status !== 'playing') return;
@@ -54,7 +54,7 @@ export default function Game({ mode, difficulty, onBack }) {
     setBoard(result.board);
     setLastMove([row, col]);
     setKoPoint(result.ko);
-    setHistory([...history, result.board]);
+    setHistory([...history, {board: result.board, capturedBlack: currentColor === BLACK ? capturedBlack + result.captured.length : capturedBlack, capturedWhite: currentColor === WHITE ? capturedWhite + result.captured.length : capturedWhite}]);
     setPassCount(0);
 
     // 計算被吃掉棋子 (黑方下棋吃到白子，白方被吃)
@@ -69,13 +69,7 @@ export default function Game({ mode, difficulty, onBack }) {
 
   const handlePass = useCallback(() => {
     if (gameOver) return;
-    setPassCount(prev => {
-      const newCount = prev + 1;
-      if (newCount >= 2) {
-        endGame();
-      }
-      return newCount;
-    });
+    setPassCount(prev => prev + 1);
     setLastMove(null);
     setKoPoint(null);
     setCurrentColor(currentColor === BLACK ? WHITE : BLACK);
@@ -85,7 +79,15 @@ export default function Game({ mode, difficulty, onBack }) {
         setAiThinking(false);
       }, 500);
     }
-  }, [currentColor, gameOver, mode, board]);
+  }, [currentColor, gameOver, mode]);
+    setLastMove(null);
+    setKoPoint(null);
+  // Watch passCount for game end
+  useEffect(() => {
+    if (passCount >= 2) {
+      endGame();
+    }
+  }, [passCount]);
 
   const endGame = () => {
     const finalScore = calculateScore(board);
@@ -104,8 +106,9 @@ export default function Game({ mode, difficulty, onBack }) {
       setLastMove(null);
       setKoPoint(null);
       setPassCount(0);
-      setCapturedBlack(0);
-      setCapturedWhite(0);
+      const prev = newHistory[newHistory.length - 1];
+      setCapturedBlack(prev.capturedBlack);
+      setCapturedWhite(prev.capturedWhite);
     }
   };
 
@@ -114,7 +117,7 @@ export default function Game({ mode, difficulty, onBack }) {
     setCurrentColor(BLACK);
     setLastMove(null);
     setKoPoint(null);
-    setHistory([createBoard()]);
+    setHistory([{board: createBoard(), capturedBlack: 0, capturedWhite: 0}]);
     setPassCount(0);
     setGameOver(false);
     setScore(null);
@@ -139,7 +142,7 @@ export default function Game({ mode, difficulty, onBack }) {
       <div className="game-status">
         <div className={`current-player ${currentColor === BLACK ? 'black' : 'white'}`}>
           <span className="stone-icon">{currentColor === BLACK ? '⚫' : '⚪'}</span>
-          <span>{currentColor === BLACK ? '黑方' : '白方'}{currentColor === WHITE && ' (貼3.75目)'}</span>
+          <span>{currentColor === BLACK ? '黑方' : '白方'}{currentColor === WHITE && ' (貼6.5目)'}</span>
         </div>
         {aiThinking && <span className="ai-thinking">AI思考中...</span>}
       </div>
@@ -177,7 +180,7 @@ export default function Game({ mode, difficulty, onBack }) {
             </div>
             <div className="score-row">
               <span>白方</span>
-              <span>{score.whiteStones}子 + {score.whiteTerritory}地 + 3.75貼目 = {score.whiteScore.toFixed(1)}</span>
+              <span>{score.whiteStones}子 + {score.whiteTerritory}地 + 6.5貼目 = {score.whiteScore.toFixed(1)}</span>
             </div>
           </div>
           <div className="winner">

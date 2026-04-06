@@ -10,7 +10,7 @@ export default function Menu({ onStartGame, onStartTutorial }) {
       </div>
       
       <div className="menu-buttons">
-        <button className="menu-btn primary" onClick={() => onStartGame('ai', DIFFICULTIES[0])}>
+        <button className="menu-btn primary" onClick={() => onStartGame('ai')}>
           <span className="icon">🤖</span>
           <span>人 vs AI</span>
         </button>
