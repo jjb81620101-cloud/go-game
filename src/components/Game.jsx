@@ -100,7 +100,7 @@ export default function Game({ mode, difficulty, onBack }) {
   const undoMove = () => {
     if (history.length > 1 && !gameOver) {
       const newHistory = history.slice(0, -1);
-      setBoard(newHistory[newHistory.length - 1]);
+      setBoard(newHistory[newHistory.length - 1].board);
       setHistory(newHistory);
       setCurrentColor(currentColor === BLACK ? WHITE : BLACK);
       setLastMove(null);
