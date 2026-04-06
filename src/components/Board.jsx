@@ -48,6 +48,22 @@ export default function Board({ board, onClick, lastMove, highlightedStones, sho
           />
         ))}
 
+        {/* 透明點擊區域（每個交叉點） */}
+        {[...Array(BOARD_SIZE)].map((_, row) =>
+          [...Array(BOARD_SIZE)].map((_, col) => (
+            <rect
+              key={`click-${row}-${col}`}
+              x={padding + col * cellSize - cellSize / 2}
+              y={padding + row * cellSize - cellSize / 2}
+              width={cellSize}
+              height={cellSize}
+              fill="transparent"
+              style={{ cursor: onClick ? 'pointer' : 'default' }}
+              onClick={() => onClick && onClick(row, col)}
+            />
+          ))
+        )}
+
         {/* 棋子 */}
         {[...Array(BOARD_SIZE)].map((_, row) =>
           [...Array(BOARD_SIZE)].map((_, col) => {
@@ -56,7 +72,7 @@ export default function Board({ board, onClick, lastMove, highlightedStones, sho
             const isLast = lastMove && lastMove[0] === row && lastMove[1] === col;
             const isHighlighted = highlightedStones?.some(([r,c]) => r === row && c === col);
             return (
-              <g key={`${row}-${col}`}>
+              <g key={`stone-${row}-${col}`}>
                 <circle
                   cx={padding + col * cellSize}
                   cy={padding + row * cellSize}
@@ -65,8 +81,7 @@ export default function Board({ board, onClick, lastMove, highlightedStones, sho
                   stroke={stone === BLACK ? "#444" : "#ccc"}
                   strokeWidth="1"
                   className="stone"
-                  onClick={() => onClick && onClick(row, col)}
-                  style={{ cursor: onClick ? 'pointer' : 'default' }}
+                  pointerEvents="none"
                 />
                 {isLast && (
                   <circle
