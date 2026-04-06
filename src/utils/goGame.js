@@ -4,11 +4,11 @@ export const BLACK = 1;
 export const WHITE = 2;
 
 export const DIFFICULTIES = [
-  { level: 1, name: '業餘15級', visits: 100 },
-  { level: 2, name: '業餘10級', visits: 300 },
-  { level: 3, name: '業餘5級', visits: 800 },
-  { level: 4, name: '業餘1段', visits: 2000 },
-  { level: 5, name: '業餘三段', visits: 5000 },
+  { level: 1, name: '業餘15級', visits: 50 },
+  { level: 2, name: '業餘10級', visits: 100 },
+  { level: 3, name: '業餘5級', visits: 200 },
+  { level: 4, name: '業餘1段', visits: 400 },
+  { level: 5, name: '業餘三段', visits: 800 },
 ];
 
 export function createBoard() {
@@ -316,7 +316,7 @@ export async function getBestMoveAsync(board, color, visits, onProgress) {
     let node = root;
     
     // Yield to main thread every 10 iterations
-    if (i % 10 === 0) {
+    if (i % 5 === 0) {
       await new Promise(resolve => setTimeout(resolve, 0));
       if (onProgress) onProgress(i / visits);
     }
