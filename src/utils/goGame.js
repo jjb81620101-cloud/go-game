@@ -307,3 +307,38 @@ export function getLegalMoves(board, color) {
   }
   return moves;
 }
+
+// 異步 MCTS 版本 - 不阻塞 UI
+export async function getBestMoveAsync(board, color, visits, onProgress) {
+  const root = new MCTSNode(board, color);
+  
+  for (let i = 0; i < visits; i++) {
+    let node = root;
+    
+    // Yield to main thread every 10 iterations
+    if (i % 10 === 0) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      if (onProgress) onProgress(i / visits);
+    }
+    
+    while (node.children.length > 0 && node.untriedMoves.length === 0) {
+      node = node.select();
+    }
+    
+    node = node.expand();
+    
+    const winner = node.simulate();
+    node.backpropagate(winner);
+  }
+
+  let best = null;
+  let bestVisits = -1;
+  for (const child of root.children) {
+    if (child.visits > bestVisits) {
+      bestVisits = child.visits;
+      best = child;
+    }
+  }
+
+  return best ? best.move : null;
+}

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Board from './Board';
 import { 
   createBoard, BLACK, WHITE, playMove, calculateScore, 
-  getBestMove, DIFFICULTIES 
+  getBestMove, getBestMoveAsync, DIFFICULTIES 
 } from '../utils/goGame';
 import './Game.css';
 
@@ -24,18 +24,23 @@ export default function Game({ mode, difficulty, onBack }) {
   // AI move
   useEffect(() => {
     if (mode === 'ai' && currentColor === WHITE && !gameOver && status === 'playing') {
+      let cancelled = false;
       setAiThinking(true);
-      const timeoutId = setTimeout(() => {
-        const diffConfig = DIFFICULTIES.find(d => d.level === difficulty.level) || DIFFICULTIES[0];
-        const move = getBestMove(board, WHITE, diffConfig.visits);
+      
+      const diffConfig = DIFFICULTIES.find(d => d.level === difficulty.level) || DIFFICULTIES[0];
+      
+      // Use async MCTS to not block UI
+      getBestMoveAsync(board, WHITE, diffConfig.visits).then(move => {
+        if (cancelled) return;
         if (move) {
           handleMove(move[0], move[1]);
         } else {
           handlePass();
         }
         setAiThinking(false);
-      }, 500);
-      return () => clearTimeout(timeoutId);
+      });
+      
+      return () => { cancelled = true; };
     }
   }, [currentColor, mode, board, gameOver, status, difficulty]);
 
