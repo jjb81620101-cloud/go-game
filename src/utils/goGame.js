@@ -163,7 +163,7 @@ export function calculateScore(board) {
     }
   }
 
-  const komi = 3.75;
+  const komi = 6.5;
   const blackScore = blackStones + blackTerritory.length;
   const whiteScore = whiteStones + whiteTerritory.length + komi;
 
