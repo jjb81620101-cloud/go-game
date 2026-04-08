@@ -13,10 +13,5 @@
 }
 
 .stone {
-  transition: transform 0.1s ease;
-  transform-origin: center;
-}
-
-.stone:hover {
-  transform: scale(1.05);
+  /* no hover scale to prevent jumping */
 }
