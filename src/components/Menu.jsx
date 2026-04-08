@@ -1,30 +1,20 @@
+import DifficultyPicker from './DifficultyPicker';
 import { DIFFICULTIES } from '../utils/goGame';
 import './Menu.css';
 
-export default function Menu({ onStartGame, onStartTutorial }) {
+export default function Menu({ onStart }) {
   return (
     <div className="menu">
-      <div className="menu-title">
-        <h1>圍棋</h1>
-        <p>禪 · 策略 · 對弈</p>
-      </div>
-      
+      <h1>⚫ 圍棋 ⚪</h1>
       <div className="menu-buttons">
-        <button className="menu-btn primary" onClick={() => onStartGame('ai')}>
-          <span className="icon">🤖</span>
-          <span>人 vs AI</span>
+        <button onClick={() => onStart({ mode: 'pvp' })}>
+          人 vs 人
         </button>
-        
-        <button className="menu-btn" onClick={() => onStartGame('pvp')}>
-          <span className="icon">👥</span>
-          <span>人 vs 人</span>
-        </button>
-        
-        <button className="menu-btn secondary" onClick={onStartTutorial}>
-          <span className="icon">📖</span>
-          <span>圍棋教程</span>
+        <button onClick={() => onStart({ mode: 'ai', difficulty: DIFFICULTIES[0] })}>
+          人 vs AI
         </button>
       </div>
+      <DifficultyPicker />
     </div>
   );
 }

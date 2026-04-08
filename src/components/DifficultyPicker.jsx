@@ -1,23 +1,17 @@
 import { DIFFICULTIES } from '../utils/goGame';
 import './DifficultyPicker.css';
 
-export default function DifficultyPicker({ onSelect, onBack }) {
+export default function DifficultyPicker() {
   return (
     <div className="difficulty-picker">
-      <h2>選擇難度</h2>
-      <div className="difficulty-list">
-        {DIFFICULTIES.map((diff) => (
-          <button 
-            key={diff.level} 
-            className="difficulty-btn"
-            onClick={() => onSelect(diff)}
-          >
-            <span className="level">Lv.{diff.level}</span>
-            <span className="name">{diff.name}</span>
+      <h3>AI 難度</h3>
+      <div className="difficulties">
+        {DIFFICULTIES.map(d => (
+          <button key={d.level} className="difficulty-btn">
+            {d.name}
           </button>
         ))}
       </div>
-      <button className="back-btn" onClick={onBack}>← 返回</button>
     </div>
   );
 }
